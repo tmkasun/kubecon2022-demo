@@ -10,9 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Task {
-  id    Int     @default(autoincrement()) @id
-  title String  @db.VarChar(500)
+model TaskStatus {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  userId    String   @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  Task      Task[]
+}
+
+model TaskGroup {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(500)
+  userId    String   @db.VarChar(100)
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Task {
+  id           Int        @id @default(autoincrement())
+  title        String     @db.VarChar(500)
+  taskStatus   TaskStatus @relation(fields: [taskStatusId], references: [id], onDelete: Restrict)
+  taskGroup    TaskGroup  @relation(fields: [taskGroupId], references: [id], onDelete: Restrict)
+  taskGroupId  Int
+  taskStatusId Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
 }
