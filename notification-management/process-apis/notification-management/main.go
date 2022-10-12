@@ -56,7 +56,7 @@ func main() {
 		// @Success 200 {object} services.NotificationCreateResponse	"Okay"
 		// @Failure 400 {string} string
 		// @Failure 500 {string} string
-		// @Router /notification [post]
+		// @Router /api/v1/notification [post]
 		r.Post("/notification", func(w http.ResponseWriter, r *http.Request) {
 
 			body := NotificationRequest{}
