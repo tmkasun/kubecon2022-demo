@@ -49,6 +49,7 @@ paths:
       operationId: "createTask"
       description: "Create a task with given details"
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -113,6 +114,7 @@ paths:
             type: integer
             minimum: 1
       requestBody:
+        required: true
         content:
           application/json:
             schema:
