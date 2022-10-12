@@ -7,7 +7,7 @@
     },
     "basePath": "/api/v1",
     "paths": {
-        "/notification": {
+        "/api/v1/notification": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -101,7 +101,7 @@
                 }
             }
         },
-        "/notification/{id}": {
+        "/api/v1/notification/{id}": {
             "get": {
                 "consumes": [
                     "application/json"

@@ -18,7 +18,7 @@ info:
   title: Notification Entity API documentation
   version: 1.0.0
 paths:
-  /notification:
+  /api/v1/notification:
     get:
       consumes:
       - application/json
@@ -79,7 +79,7 @@ paths:
       summary: Create Notification
       tags:
       - Notification
-  /notification/{id}:
+  /api/v1/notification/{id}:
     delete:
       consumes:
       - application/json

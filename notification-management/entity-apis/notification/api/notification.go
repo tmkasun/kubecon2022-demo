@@ -29,7 +29,7 @@ func NotificationRoutes(r chi.Router) {
 // @Success 200 {object} db.Notification	"Okay"
 // @Failure 400 {string} string
 // @Failure 500 {string} string
-// @Router /notification [post]
+// @Router /api/v1/notification [post]
 func NotificationCreate(w http.ResponseWriter, r *http.Request) {
 	body := db.Notification{}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -55,7 +55,7 @@ func NotificationCreate(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} []db.Notification	"Okay"
 // @Failure 400 {string} string
 // @Failure 404 {string} string
-// @Router /notification [get]
+// @Router /api/v1/notification [get]
 func NotificationList(w http.ResponseWriter, r *http.Request) {
 	var query db.Notification
 	if err := decoder.Decode(&query, r.URL.Query()); err != nil {
@@ -79,7 +79,7 @@ func NotificationList(w http.ResponseWriter, r *http.Request) {
 // @Param	id	path	string	true	"id"
 // @Success 200 {object} string	"Okay"
 // @Failure 404 {string} string
-// @Router /notification/{id} [delete]
+// @Router /api/v1/notification/{id} [delete]
 func NotificationDelete(w http.ResponseWriter, r *http.Request) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
@@ -99,7 +99,7 @@ func NotificationDelete(w http.ResponseWriter, r *http.Request) {
 // @Param data body db.Notification	true	"data"
 // @Success 200 {object} db.Notification	"Okay"
 // @Failure 404 {string} string
-// @Router /notification/{id} [put]
+// @Router /api/v1/notification/{id} [put]
 func NotificationUpdate(w http.ResponseWriter, r *http.Request) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	body := db.Notification{}
@@ -123,7 +123,7 @@ func NotificationUpdate(w http.ResponseWriter, r *http.Request) {
 // @Param	id	path	string	true	"id"
 // @Success 200 {object} string	"Okay"
 // @Failure 404 {string} string
-// @Router /notification/{id} [get]
+// @Router /api/v1/notification/{id} [get]
 func NotificationGet(w http.ResponseWriter, r *http.Request) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
