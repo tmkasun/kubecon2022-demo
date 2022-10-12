@@ -1,0 +1,62 @@
+.todo-item-overlay {
+    position: absolute;
+    width: 100%;
+    background: #ffffffb5;
+    height: 100%;
+    margin: -12.8px;
+    border-radius: 1rem;
+    backdrop-filter: blur(0.8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-item-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 0.2rem;
+}
+
+.todo-item-text {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 1rem;
+}
+
+.todo-item-li {
+    /* position: relative; */
+    cursor: move;
+    list-style: none;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    border-radius: 2% / 20%;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    transition: all 0.1s ease-in-out;
+}
+
+.todo-item-li:hover {
+    box-shadow: rgb(0 0 0 / 56%) 0px 2px 7px, rgb(0 0 0 / 30%) 0px 7px 13px -3px, rgb(0 0 0 / 20%) 0px -3px 0px inset;
+    transform: scale(1.01, 1.01);
+}
+
+.pending-task {
+    background-color: #ffca3aa6;
+}
+
+.completed-task {
+    background-color: #ff595ea6;
+}
+
+.inprogress-task {
+    background-color: #8ac926a6;
+}

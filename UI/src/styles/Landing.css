@@ -1,0 +1,30 @@
+.landing-wrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+}
+
+.login-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    box-shadow: rgb(99 99 99 / 20%) 0px 2px 8px 0px;
+    row-gap: 2rem;
+    width: 50%;
+    height: 50%;
+    background-color: white;
+}
+
+.landing-wrapper .card {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-wrapper .divider {
+    border-right: 1px solid black;
+}
