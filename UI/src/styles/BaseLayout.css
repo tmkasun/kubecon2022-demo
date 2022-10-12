@@ -1,0 +1,26 @@
+.base-grid {
+    padding: 0rem 1rem;
+    display: grid;
+    grid-gap: 2rem;
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4rem 1fr 2rem;
+}
+
+.grid-footer {
+    color: rgb(136, 136, 136);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: white;
+    border-radius: 0.5rem 0.5rem 0 0;
+    box-shadow: 0px 0px 12px -3px;
+}
+
+.top-bar {
+    padding-top: 1rem;
+}
