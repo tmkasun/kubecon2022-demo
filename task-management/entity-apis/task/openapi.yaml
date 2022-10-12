@@ -1,0 +1,319 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/RAMITHJ/TaskAPI/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: http://localhost:8080/task
+info:
+  description: "CRUD Operations for Tasks"
+  version: "1.0.0"
+  title: "Task API"
+  contact:
+    email: "choreo-help@wso2.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: "todo"
+    description: "Sample todo application"
+  - name: "demo"
+    description: "This api is created for demo purposes"
+paths:
+  /task:
+    get:
+      summary: "returns tasks for a given task group"
+      operationId: "getTasksByTaskGroupId"
+      description: |
+        Given a list of tasks given the task group Id. list will be sorted by last updated date.
+      parameters:
+        - in: "query"
+          name: "taskGroupId"
+          description: "Task Group Id"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "list of tasks belonging to the given task group"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "500":
+          description: "internal error occurred"
+    post:
+      summary: "Create a Task"
+      operationId: "createTask"
+      description: "Create a task with given details"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Review monthly expenses"
+                taskStatus:
+                  type: string
+                  example: "Open"
+                taskGroupId:
+                  type: integer
+                  example: 5
+        description: "An example in progress task"
+      responses:
+        "201":
+          description: "item created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: "invalid input, object invalid"
+        "500":
+          description: "internal server error occurred"
+  /task/{id}:
+    get:
+      summary: "Retrieve a task by id"
+      operationId: "getTaskById"
+      description: |
+        Retrieve a task by id.
+      parameters:
+        - name: id
+          in: path
+          description: "Task Id"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: "The task with Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+        "404":
+          description: "Unable to find the task"
+    put:
+      summary: "Update a task by id"
+      operationId: "updateTaskById"
+      description: |
+        Update a task by id.
+      parameters:
+        - name: id
+          in: path
+          description: "Task Id"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Review monthly expenses"
+                taskStatus:
+                  type: string
+                  example: "Open"
+                taskGroupId:
+                  type: integer
+                  example: 5
+        description: "An example in progress task"
+      responses:
+        "200":
+          description: "The task with Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+        "404":
+          description: "Unable to find the task"
+    delete:
+      summary: "Delete a task by id"
+      operationId: "deleteTaskById"
+      description: |
+        Delete a task by id.
+      parameters:
+        - name: id
+          in: path
+          description: "Task Id"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: "The task with Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "Unable to find the task"
+  /task/{id}/status/{taskStatus}:
+    post:
+      summary: "Change a status of a task by Id"
+      operationId: "changeTaskStatusByTaskId"
+      description: |
+        Change a status of a task by Id
+      parameters:
+        - name: id
+          in: path
+          description: "Task Id"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+        - name: taskStatus
+          in: path
+          description: "New status of the task"
+          required: true
+          schema:
+            type: string
+            minimum: 1
+            example: "InProgress"
+      responses:
+        "200":
+          description: "changed task"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "unable to find the task with given id"
+        "500":
+          description: "internal server error occurred"
+  /task/{id}/group/{taskGroupId}:
+    post:
+      summary: "Change a group of a task by Id"
+      operationId: "changeTaskGroupByTaskId"
+      description: |
+        Change the group of a task by Id
+      parameters:
+        - name: id
+          in: path
+          description: "Task Id"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+        - name: taskGroupId
+          in: path
+          description: "New group id of the task"
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 2
+      responses:
+        "200":
+          description: "changed task"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "unable to find the task with given id"
+        "500":
+          description: "internal server error occurred"
+
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - id
+        - title
+        - taskGroupId
+        - taskStatus
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 10
+        title:
+          type: string
+          example: "Review monthly expenses"
+        taskGroupId:
+          type: integer
+          minimum: 1
+          example: 5
+        taskStatus:
+          type: string
+          example: "Open"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
+    TaskGroup:
+      type: object
+      required:
+        - id
+        - title
+        - userId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 10
+        title:
+          type: string
+          example: "Urgent and important tasks"
+        userId:
+          type: string
+          example: "ea69ddda-c44f-4ba5-a701-fda8a6c1ff42"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
+    TaskStatus:
+      type: object
+      required:
+        - id
+        - name
+        - userId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 10
+        name:
+          type: string
+          example: "InProgress"
+        userId:
+          type: string
+          example: "ea69ddda-c44f-4ba5-a701-fda8a6c1ff42"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2022-10-12T15:56:12.171Z"
