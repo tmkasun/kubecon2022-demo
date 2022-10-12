@@ -8,9 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"os"
 )
 
-const collectionName = "notifications"
+// const collectionName = "notifications"
 
 var collection *mongo.Collection
 
@@ -23,7 +24,7 @@ type Notification struct {
 }
 
 func init() {
-	collection = GetDB().Collection(collectionName)
+	collection = GetDB().Collection(os.Getenv("collectionName"))
 }
 
 func (obj *Notification) Save(ctx context.Context) error {
