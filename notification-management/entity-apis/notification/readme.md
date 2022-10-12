@@ -10,6 +10,7 @@ URI - mongodb connection string
 
 ### Choreo BYOC
 
-Dockerfile - notification-management/entity-apis/notification/Dockerfile
-Docker Context - notification-management/entity-apis/notification/
-Open API File Path - notification-management/entity-apis/notification/docs/swagger.json
+- Dockerfile - notification-management/entity-apis/notification/Dockerfile
+- Docker Context - notification-management/entity-apis/notification/
+- Port - 3000
+- Open API File Path - notification-management/entity-apis/notification/docs/swagger.json
