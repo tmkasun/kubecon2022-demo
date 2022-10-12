@@ -37,11 +37,11 @@ taskRoute.get(`/:id`, async (req, res) => {
 })
 
 taskRoute.post(`/`, async (req, res) => {
-    const { title, taskStatusId, taskGroupId } = req.body;
+    const { title, taskStatus, taskGroupId } = req.body;
     const task = await prisma.task.create({
         data: {
             title: title,
-            taskStatusId: taskStatusId,
+            taskStatus: taskStatus,
             taskGroupId: taskGroupId
         }
     });
@@ -50,7 +50,7 @@ taskRoute.post(`/`, async (req, res) => {
 
 taskRoute.put(`/:id`, async (req, res) => {
     const { id } = req.params;
-    const { title, taskStatusId, taskGroupId } = req.body;
+    const { title, taskStatus, taskGroupId } = req.body;
 
     try {
         const task = await prisma.task.update({
@@ -59,7 +59,7 @@ taskRoute.put(`/:id`, async (req, res) => {
             },
             data: {
                 title: title,
-                taskStatusId: taskStatusId,
+                taskStatus: taskStatus,
                 taskGroupId: taskGroupId
             }
         })
@@ -75,8 +75,8 @@ taskRoute.put(`/:id`, async (req, res) => {
 
 })
 
-taskRoute.post(`/:id/status/:taskStatusId`, async (req, res) => {
-    const { id, taskStatusId } = req.params;
+taskRoute.post(`/:id/status/:taskStatus`, async (req, res) => {
+    const { id, taskStatus } = req.params;
 
     try {
         const task = await prisma.task.update({
@@ -84,7 +84,7 @@ taskRoute.post(`/:id/status/:taskStatusId`, async (req, res) => {
                 id: Number(id)
             },
             data: {
-                taskStatusId: Number(taskStatusId)
+                taskStatus: taskStatus as string
             }
         })
         res.status(StatusCodes.OK).json(task);

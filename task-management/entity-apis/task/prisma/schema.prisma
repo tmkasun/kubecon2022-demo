@@ -16,7 +16,7 @@ model TaskStatus {
   userId    String   @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  Task      Task[]
+  //Task      Task[]
 }
 
 model TaskGroup {
@@ -29,12 +29,12 @@ model TaskGroup {
 }
 
 model Task {
-  id           Int        @id @default(autoincrement())
-  title        String     @db.VarChar(500)
-  taskStatus   TaskStatus @relation(fields: [taskStatusId], references: [id], onDelete: Restrict)
-  taskGroup    TaskGroup  @relation(fields: [taskGroupId], references: [id], onDelete: Restrict)
-  taskGroupId  Int
-  taskStatusId Int
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(500)
+  //taskStatus   TaskStatus @relation(fields: [taskStatusId], references: [id], onDelete: Restrict)
+  taskGroup   TaskGroup @relation(fields: [taskGroupId], references: [id], onDelete: Restrict)
+  taskGroupId Int
+  taskStatus  String    @db.VarChar(100)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 }
