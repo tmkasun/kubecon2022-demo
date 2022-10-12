@@ -20,6 +20,9 @@ type NotificationRequest struct {
 	SendEmail bool   `json:"sendEmail"`
 }
 
+// @title Notification Management API documentation
+// @version 1.0.0
+// @BasePath /api/v1
 func main() {
 
 	r := chi.NewRouter()
