@@ -7,6 +7,7 @@ Nilesh Jayanandana
 ### Environment Variables
 
 URI - mongodb connection string
+collectionName - mongoDB collection used
 
 ### Choreo BYOC
 

@@ -15,6 +15,10 @@ type NotificationCreateRequest struct {
 }
 
 type NotificationCreateResponse struct {
+	Data NotificationCreateResponseData `json:"data,omitempty"`
+}
+
+type NotificationCreateResponseData struct {
 	ID        string `json:"_id,omitempty"`
 	UserEmail string `json:"userEmail,omitempty"`
 	Message   string `json:"message,omitempty"`
@@ -22,7 +26,7 @@ type NotificationCreateResponse struct {
 	Read      *bool  `json:"read,omitempty"`
 }
 
-func NECreateNotification(req NotificationCreateRequest) (*NotificationCreateResponse, error) {
+func NECreateNotification(req NotificationCreateRequest) (*NotificationCreateResponseData, error) {
 
 	request := gorequest.New()
 
@@ -40,5 +44,6 @@ func NECreateNotification(req NotificationCreateRequest) (*NotificationCreateRes
 		return nil, err
 	}
 
-	return &res, nil
+	response := res.Data
+	return &response, nil
 }

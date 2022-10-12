@@ -81,7 +81,7 @@ func NotificationRoute(w http.ResponseWriter, r *http.Request) {
 	helpers.RespondwithJSON(w, 200, obj)
 }
 
-func NotificationCreate(ctx context.Context, req NotificationRequest) (*services.NotificationCreateResponse, error) {
+func NotificationCreate(ctx context.Context, req NotificationRequest) (*services.NotificationCreateResponseData, error) {
 
 	if v, err := helpers.IsValid(req); !v {
 		return nil, err
