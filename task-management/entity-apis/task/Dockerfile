@@ -16,9 +16,9 @@ RUN npm install
 COPY . .
 
 # Set a non-root user
-#USER 10014
+USER 10014
 
 EXPOSE 8080
 
-CMD [ "node", "ts-node", "index.ts" ]
+CMD [ "ts-node", "src/index.ts" ]
 
