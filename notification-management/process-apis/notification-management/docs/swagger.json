@@ -6,5 +6,90 @@
         "version": "1.0.0"
     },
     "basePath": "/api/v1",
-    "paths": {}
+    "paths": {
+        "/api/v1/notification": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notification"
+                ],
+                "summary": "Create Notification",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.NotificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Okay",
+                        "schema": {
+                            "$ref": "#/definitions/services.NotificationCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.NotificationRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "sendEmail": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "userEmail": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.NotificationCreateResponse": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "read": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "userEmail": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }

@@ -48,36 +48,37 @@ func main() {
 	})
 
 	r.Route("/api/v1/", func(r chi.Router) {
-		// @Summary Create Notification
-		// @Tags Notification
-		// @Accept json
-		// @Produce json
-		// @Param data body NotificationRequest	true	"data"
-		// @Success 200 {object} services.NotificationCreateResponse	"Okay"
-		// @Failure 400 {string} string
-		// @Failure 500 {string} string
-		// @Router /api/v1/notification [post]
-		r.Post("/notification", func(w http.ResponseWriter, r *http.Request) {
-
-			body := NotificationRequest{}
-
-			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-				helpers.RespondWithError(w, 400, err.Error())
-				return
-			}
-
-			ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-			obj, err := NotificationCreate(ctx, body)
-			if err != nil {
-				helpers.RespondWithError(w, 500, err.Error())
-				return
-			}
-			helpers.RespondwithJSON(w, 200, obj)
-		})
+		r.Post("/notification", NotificationRoute)
 	})
 
 	logrus.Info("http server started")
 	http.ListenAndServe(":4000", r)
+}
+
+// @Summary Create Notification
+// @Tags Notification
+// @Accept json
+// @Produce json
+// @Param data body NotificationRequest	true	"data"
+// @Success 200 {object} services.NotificationCreateResponse	"Okay"
+// @Failure 400 {string} string
+// @Failure 500 {string} string
+// @Router /api/v1/notification [post]
+func NotificationRoute(w http.ResponseWriter, r *http.Request) {
+	body := NotificationRequest{}
+
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		helpers.RespondWithError(w, 400, err.Error())
+		return
+	}
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	obj, err := NotificationCreate(ctx, body)
+	if err != nil {
+		helpers.RespondWithError(w, 500, err.Error())
+		return
+	}
+	helpers.RespondwithJSON(w, 200, obj)
 }
 
 func NotificationCreate(ctx context.Context, req NotificationRequest) (*services.NotificationCreateResponse, error) {
