@@ -9,3 +9,9 @@ Nilesh Jayanandana
 notificationURL - url of the notification entity service
 domain - email domain of mailgun
 apiKey - apiKey of mailgun
+
+### Choreo BYOC
+
+Dockerfile - notification-management/process-apis/notification-management/Dockerfile
+Docker Context - notification-management/process-apis/notification-management/
+Open API File Path - notification-management/process-apis/notification-management/docs/swagger.json
