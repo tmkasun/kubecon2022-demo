@@ -1,0 +1,244 @@
+openapi: 3.0.1
+info:
+  title: Task Management - Process API
+  version: '1.0'
+servers:
+  - url: 'http://localhost:9090/task/manage'
+paths:
+  /tasks:
+    post:
+      summary: Create a new task
+      operationId: post-tasks
+      responses:
+        '201':
+          $ref: '#/components/responses/Task'
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskTitle'
+        description: 'a'
+      description: 'a'
+  '/tasks/{taskId}':
+    parameters:
+      - schema:
+          type: string
+        name: taskId
+        in: path
+        required: true
+    put:
+      summary: Update task
+      operationId: post-tasks-taskId
+      responses:
+        '200':
+          $ref: '#/components/responses/Task'
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskTitle'
+              x-examples:
+                Example 1:
+                  title: Task 2
+    delete:
+      summary: Delete task
+      operationId: delete-tasks-taskId
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+  '/tasks/{taskId}/change-group':
+    parameters:
+      - schema:
+          type: string
+        name: taskId
+        in: path
+        required: true
+    post:
+      summary: Change task group
+      operationId: post-tasks-taskId-change-group
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groupId:
+                    type: integer
+                x-examples:
+                  Example 1:
+                    groupId: 1
+              examples:
+                example-1:
+                  value:
+                    groupId: 0
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - schema:
+            type: integer
+          in: query
+          name: newGroupId
+          required: true
+  '/tasks/{taskId}/change-status':
+    parameters:
+      - schema:
+          type: string
+        name: taskId
+        in: path
+        required: true
+    post:
+      summary: Change task status
+      operationId: post-tasks-taskId-change-status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                x-examples:
+                  Example 1:
+                    status: in-progress
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - schema:
+            type: string
+          in: query
+          name: status
+          required: true
+  /groups:
+    post:
+      summary: Create a new task group
+      operationId: post-groups
+      responses:
+        '201':
+          $ref: '#/components/responses/Group'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupName'
+              x-examples:
+                Example 1:
+                  name: Urgent and Important
+  '/groups/{groupId}':
+    parameters:
+      - schema:
+          type: string
+        name: groupId
+        in: path
+        required: true
+    put:
+      summary: Update task group
+      operationId: put-groups-groupId
+      responses:
+        '200':
+          $ref: '#/components/responses/Group'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupName'
+              x-examples:
+                Example 1:
+                  name: Urgent and Not Important
+  /archive/tasks:
+    post:
+      summary: Archive tasks
+      operationId: post-archive-tasks
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - schema:
+            type: integer
+          in: query
+          name: taskId
+          required: true
+  /archive/groups:
+    post:
+      summary: Archive task group
+      operationId: post-archive-groups
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+components:
+  schemas:
+    TaskTitle:
+      type: object
+      properties:
+        title:
+          type: string
+      x-examples:
+        Example 1:
+          title: Task 1
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+        groupId:
+          type: integer
+      x-examples:
+        Example 1:
+          id: 1
+          title: Task 1
+          status: open
+          groupId: 1
+    GroupName:
+      type: object
+      properties:
+        name:
+          type: string
+      x-examples:
+        Example 1:
+          name: Urgent and Important
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      x-examples:
+        Example 1:
+          id: 1
+          name: Urgent and Important
+  responses:
+    Task:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Task'
+    Group:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Group'
+  requestBodies: {}
+  parameters:
+    groupId:
+      name: groupId
+      in: query
+      required: true
+      schema:
+        type: integer
