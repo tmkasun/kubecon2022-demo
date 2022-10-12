@@ -8,6 +8,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// @title Notification Entity API documentation
+// @version 1.0.0
+// @BasePath /api/v1
 func main() {
 
 	routes, err := api.LoadAPI()

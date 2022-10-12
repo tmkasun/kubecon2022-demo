@@ -19,6 +19,6 @@ FROM alpine:3.14.1
 # until https://github.com/alpinelinux/docker-alpine/issues/199#issuecomment-906122484 is resolved
 RUN apk add --no-cache openssl-dev
 
-
 COPY --from=build-env /go/bin/svc /go/bin/svc
+USER 10014
 ENTRYPOINT ["/go/bin/svc"]

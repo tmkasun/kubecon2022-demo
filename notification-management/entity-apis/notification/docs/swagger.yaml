@@ -1,0 +1,158 @@
+basePath: /api/v1
+definitions:
+  db.Notification:
+    properties:
+      _id:
+        type: string
+      message:
+        type: string
+      read:
+        type: boolean
+      type:
+        type: string
+      userEmail:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Notification Entity API documentation
+  version: 1.0.0
+paths:
+  /notification:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Email
+        in: query
+        name: userEmail
+        type: string
+      - description: User ID
+        in: query
+        name: userId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            items:
+              $ref: '#/definitions/db.Notification'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Get Notification List
+      tags:
+      - Notification
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/db.Notification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            $ref: '#/definitions/db.Notification'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create Notification
+      tags:
+      - Notification
+  /notification/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Delete Notification
+      tags:
+      - Notification
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Get Notification
+      tags:
+      - Notification
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/db.Notification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            $ref: '#/definitions/db.Notification'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Update Notification
+      tags:
+      - Notification
+swagger: "2.0"
