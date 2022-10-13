@@ -12,15 +12,30 @@ paths:
       responses:
         '201':
           $ref: '#/components/responses/Task'
-      parameters:
-        - $ref: '#/components/parameters/groupId'
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskTitle'
-        description: 'a'
-      description: 'a'
+              type: object
+              x-examples:
+                Example 1:
+                  groupId: 5
+                  title: Task 1
+              properties:
+                groupId:
+                  type: integer
+                title:
+                  type: string
+              required:
+                - groupId
+                - title
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      description: ''
   '/tasks/{taskId}':
     parameters:
       - schema:
@@ -34,24 +49,27 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Task'
-      parameters:
-        - $ref: '#/components/parameters/groupId'
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskTitle'
+              type: object
               x-examples:
                 Example 1:
                   title: Task 2
+              properties:
+                title:
+                  type: string
+              required:
+                - title
     delete:
       summary: Delete task
       operationId: delete-tasks-taskId
       responses:
         '200':
           description: OK
-      parameters:
-        - $ref: '#/components/parameters/groupId'
+      parameters: []
   '/tasks/{taskId}/change-group':
     parameters:
       - schema:
@@ -79,13 +97,24 @@ paths:
                 example-1:
                   value:
                     groupId: 0
-      parameters:
-        - $ref: '#/components/parameters/groupId'
-        - schema:
-            type: integer
-          in: query
-          name: newGroupId
-          required: true
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  groupId: 1
+                  newGroupId: 5
+              properties:
+                groupId:
+                  type: integer
+                newGroupId:
+                  type: integer
+              required:
+                - groupId
+                - newGroupId
   '/tasks/{taskId}/change-status':
     parameters:
       - schema:
@@ -109,13 +138,20 @@ paths:
                 x-examples:
                   Example 1:
                     status: in-progress
-      parameters:
-        - $ref: '#/components/parameters/groupId'
-        - schema:
-            type: string
-          in: query
-          name: status
-          required: true
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  status: InProgress
+              properties:
+                status:
+                  type: string
+              required:
+                - status
   /groups:
     post:
       summary: Create a new task group
@@ -159,13 +195,24 @@ paths:
       responses:
         '200':
           description: OK
-      parameters:
-        - $ref: '#/components/parameters/groupId'
-        - schema:
-            type: integer
-          in: query
-          name: taskId
-          required: true
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  groupId: 2
+                  taskId: 123
+              properties:
+                groupId:
+                  type: integer
+                taskId:
+                  type: integer
+              required:
+                - groupId
+                - taskId
   /archive/groups:
     post:
       summary: Archive task group
@@ -173,18 +220,22 @@ paths:
       responses:
         '200':
           description: OK
-      parameters:
-        - $ref: '#/components/parameters/groupId'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  groupId: 2
+              properties:
+                groupId:
+                  type: integer
+              required:
+                - groupId
 components:
   schemas:
-    TaskTitle:
-      type: object
-      properties:
-        title:
-          type: string
-      x-examples:
-        Example 1:
-          title: Task 1
     Task:
       type: object
       properties:
@@ -204,12 +255,14 @@ components:
           groupId: 1
     GroupName:
       type: object
-      properties:
-        name:
-          type: string
       x-examples:
         Example 1:
           name: Urgent and Important
+      properties:
+        name:
+          type: string
+      required:
+        - name
     Group:
       type: object
       properties:
@@ -235,10 +288,4 @@ components:
           schema:
             $ref: '#/components/schemas/Group'
   requestBodies: {}
-  parameters:
-    groupId:
-      name: groupId
-      in: query
-      required: true
-      schema:
-        type: integer
+  parameters: {}

@@ -11,7 +11,7 @@ public type CreatedTask record {|
 |};
 
 public type GroupName record {
-    string name?;
+    string name;
 };
 
 public type Group record {
@@ -26,14 +26,37 @@ public type Task record {
     int groupId?;
 };
 
+public type ArchiveTasksBody record {
+    int groupId;
+    int taskId;
+};
+
+public type ArchiveGroupsBody record {
+    int groupId;
+};
+
+public type TasksTaskidBody record {
+    string title;
+};
+
 public type InlineResponse2001 record {
     string status?;
 };
 
-public type TaskTitle record {
-    string title?;
-};
-
 public type InlineResponse200 record {
     int groupId?;
+};
+
+public type TasksBody record {
+    int groupId;
+    string title;
+};
+
+public type TaskidChangegroupBody record {
+    int groupId;
+    int newGroupId;
+};
+
+public type TaskidChangestatusBody record {
+    string status;
 };
