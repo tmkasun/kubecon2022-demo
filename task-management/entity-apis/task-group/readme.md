@@ -17,7 +17,7 @@ Mount Path: /usr/src/app/.env
 
 ### Choreo BYOC
 
-- Dockerfile - /task-management/entity-apis/task-group/Dockerfile
-- Docker Context - /task-management/entity-apis/task-group
+- Dockerfile - task-management/entity-apis/task-group/Dockerfile
+- Docker Context - /task-management/entity-apis/task-group/
 - Port - 8080
 - Open API File Path - /task-management/entity-apis/task-group/openapi.yaml
