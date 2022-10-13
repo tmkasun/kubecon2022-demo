@@ -1,23 +1,23 @@
 import ballerina/http;
 
 // ------------ Tasks
-public isolated function createNewTask(int groupId, TaskTitle taskTitle) returns CreatedTask {
+public isolated function createNewTask(TasksBody payload) returns CreatedTask {
   return {
     body: {
       id: 1,
-      title: <string>taskTitle.title,
-      groupId: groupId,
+      title: payload.title,
+      groupId: payload.groupId,
       status: "open"
     }
   };
 }
 
-public isolated function updateTask(string taskId, int groupId, TaskTitle taskTitle) returns Task|error {
+public isolated function updateTask(string taskId, TasksTaskidBody payload) returns Task|error {
   int id = check int:fromString(taskId);
   return {
     id,
-    title: <string>taskTitle.title,
-    groupId: groupId,
+    title: payload.title,
+    groupId: 1,
     status: "open"
   };
 }
@@ -26,15 +26,15 @@ public isolated function deleteTask(string taskId) returns http:Ok {
   return http:OK;
 }
 
-public isolated function changeTaskGroup(string taskId, int groupId, int newGroupId) returns InlineResponse200{
+public isolated function changeTaskGroup(string taskId, TaskidChangegroupBody payload) returns InlineResponse200{
   return {
-    groupId:newGroupId
+    groupId:<int>payload.newGroupId
   };
 }
 
-public isolated function changeTaskStatus(int groupId, string status) returns InlineResponse2001{
+public isolated function changeTaskStatus(string taskId, TaskidChangestatusBody payload) returns InlineResponse2001{
   return {
-    status
+    status: payload.status
   };
 }
 
@@ -59,10 +59,10 @@ public isolated function updateGroup(string groupId, GroupName groupName) return
 
 // ------------ Archive
 
-public isolated function archiveTask(int groupId, int taskId) returns http:Ok {
+public isolated function archiveTask(ArchiveTasksBody payload) returns http:Ok {
   return http:OK;
 }
 
-public isolated function archiveGroup(int groupId) returns http:Ok {
+public isolated function archiveGroup(ArchiveGroupsBody payload) returns http:Ok {
   return http:OK;
 }
