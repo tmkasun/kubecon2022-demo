@@ -98,9 +98,9 @@ func NotificationCreate(ctx context.Context, req NotificationRequest) (*services
 		return nil, err
 	}
 
-	enableEmail := os.Getenv("enableEmail")
+	sendEmail := os.Getenv("sendEmail")
 
-	if enableEmail == "true" {
+	if sendEmail == "true" {
 		go services.SendEmail(ctx, req.UserEmail)
 	}
 
