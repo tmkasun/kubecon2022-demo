@@ -3,6 +3,7 @@ import ballerina/http;
 import ballerina/jwt;
 
 const string BACKEND_JWT_HEADER_KEY = "x-jwt-assertion";
+const string OPEN_STATE = "open";
 
 // Asgardeo user attributes. 
 // More info: https://wso2.com/asgardeo/docs/guides/users/attributes/manage-attributes
@@ -14,8 +15,11 @@ configurable string taskApiUrl = ?;
 configurable string notificationUrl = ?;
 configurable string accessToken = ?;
 
+// Accessed via internal URLs given in Choreo DevOps Portal.
 final GroupClient groupClient = check new ({}, groupApiUrl);
 final TaskClient taskClient = check new ({}, taskApiUrl);
+
+// Accessed via public URLs using an access token generated from Choreo Developer Portal.
 final NotificationClient notificationClient = check new ({auth: {token: accessToken}}, notificationUrl);
 
 service / on new http:Listener(9090) {
@@ -27,7 +31,7 @@ service / on new http:Listener(9090) {
     resource function post tasks(@http:Payload TasksBody payload) returns CreatedTask|error {
         TaskBody taskBody = {
             title: payload.title,
-            taskStatus: "open",
+            taskStatus: OPEN_STATE,
             taskGroupId: payload.groupId
         };
         Task task = check taskClient->createTask(taskBody);
@@ -136,31 +140,33 @@ service / on new http:Listener(9090) {
         };
         Task taskByIdResult = check taskClient->updateTaskById(id, taskIdBody);
 
-        // Send an email notification if the task was reopened.
-        [string, string]|error extractedEmailAndGivenName = extractEmailAndGivenName(request);
-        if extractedEmailAndGivenName is string[] {
-            [string, string] [email, name] = extractedEmailAndGivenName;
+        // Send an email notification only if the task was re-opened.
+        if newStatus == OPEN_STATE {
+            [string, string]|error extractedEmailAndGivenName = extractEmailAndGivenName(request);
+            if extractedEmailAndGivenName is string[] {
+                [string, string] [email, name] = extractedEmailAndGivenName;
 
-            string msg = string `Hi ${name}, The task ${taskTitle} that was in ${originalStatus} status has been reopened.`;
-            MainNotificationrequest notification = {
-                sendEmail: true,
-                userEmail: email,
-                'type: "info",
-                message: msg
-            };
-            ServicesNotificationcreateresponse|error postApiV1Notification =
-            notificationClient->postApiV1Notification(notification);
+                string msg = string `Hi ${name}, The task "${taskTitle}" that was in "${originalStatus}" status has been reopened.`;
+                MainNotificationrequest notification = {
+                    sendEmail: true,
+                    userEmail: email,
+                    'type: "info",
+                    message: msg
+                };
+                ServicesNotificationcreateresponse|error postApiV1Notification =
+                notificationClient->postApiV1Notification(notification);
 
-            if postApiV1Notification is ServicesNotificationcreateresponse {
-                string successLogMsg = string `Email notification sent to ${email} for task ${taskTitle}`;
-                log:printInfo(successLogMsg);
+                if postApiV1Notification is ServicesNotificationcreateresponse {
+                    string successLogMsg = string `Email notification sent to ${email} for task ${taskTitle}`;
+                    log:printInfo(successLogMsg);
+                } else {
+                    log:printError("Could not send a notification for the reopened task. Error while invoking" +
+                    " the notification API.", postApiV1Notification, taskId = id, taskTitle = taskTitle);
+                }
             } else {
-                log:printError("Could not send a notification for the reopened task. Error while invoking" +
-            " the notification API.", postApiV1Notification, taskId = id, taskTitle = taskTitle);
+                log:printError("Error while extracting user info from the backend JWT. Will not be sending an email" +
+                " notification for the reopened task.", extractedEmailAndGivenName, taskId = id, taskTitle = taskTitle);
             }
-        } else {
-            log:printError("Error while extracting user info from the backend JWT. Will not be sending an email" +
-            " notification for the reopened task.", extractedEmailAndGivenName, taskId = id, taskTitle = taskTitle);
         }
 
         return {
