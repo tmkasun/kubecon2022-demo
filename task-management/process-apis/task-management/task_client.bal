@@ -8,7 +8,7 @@ public isolated client class TaskClient {
     # + clientConfig - The configurations to be used when initializing the `connector` 
     # + serviceUrl - URL of the target service 
     # + return - An error if connector initialization failed 
-    public isolated function init(http:ClientConfiguration clientConfig = {}, string serviceUrl = "https://virtserver.swaggerhub.com/RAMITHJ/TaskAPI/1.0.0") returns error? {
+    public isolated function init(http:ClientConfiguration clientConfig = {}, string serviceUrl = "http://localhost:8080/task") returns error? {
         http:Client httpEp = check new (serviceUrl, clientConfig);
         self.clientEp = httpEp;
         return;

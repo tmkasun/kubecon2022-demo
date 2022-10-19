@@ -125,3 +125,19 @@ public type TaskgroupIdBody record {
     string title?;
 };
 
+//-- Notification client
+
+public type ServicesNotificationcreateresponse record {
+    string _id?;
+    string message?;
+    boolean read?;
+    string 'type?;
+    string userEmail?;
+};
+
+public type MainNotificationrequest record {
+    string message;
+    boolean sendEmail?;
+    string 'type?;
+    string userEmail;
+};

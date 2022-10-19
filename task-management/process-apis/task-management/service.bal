@@ -1,12 +1,22 @@
+import ballerina/log;
 import ballerina/http;
 import ballerina/jwt;
 
+const string BACKEND_JWT_HEADER_KEY = "x-jwt-assertion";
+
+// Asgardeo user attributes. 
+// More info: https://wso2.com/asgardeo/docs/guides/users/attributes/manage-attributes
+const string USER_ATTRIBUTE_EMAIL = "http://wso2.org/claims/emailaddress";
+const string USER_ATTRIBUTE_GIVEN_NAME = "http://wso2.org/claims/givenname";
+
 configurable string groupApiUrl = ?;
 configurable string taskApiUrl = ?;
+configurable string notificationUrl = ?;
 configurable string accessToken = ?;
 
-final GroupClient groupClient = check new ({auth: {token: accessToken}}, groupApiUrl);
-final TaskClient taskClient = check new ({auth: {token: accessToken}}, taskApiUrl);
+final GroupClient groupClient = check new ({}, groupApiUrl);
+final TaskClient taskClient = check new ({}, taskApiUrl);
+final NotificationClient notificationClient = check new ({auth: {token: accessToken}}, notificationUrl);
 
 service / on new http:Listener(9090) {
 
@@ -99,26 +109,60 @@ service / on new http:Listener(9090) {
     #
     # + payload - New status of the task
     # + return - Content of the task after updating the task status
-    resource function post tasks/[string taskId]/'change\-status(@http:Payload TaskidChangestatusBody payload
-    ) returns InlineResponse2001|ConflictMessage|error {
+    resource function post tasks/[string taskId]/'change\-status(@http:Payload TaskidChangestatusBody payload,
+    http:Request request) returns InlineResponse2001|ConflictMessage|error {
 
+        string newStatus = payload.status;
         int id = check int:fromString(taskId);
+
         Task taskById = check taskClient->getTaskById(id);
-        if (payload.status == taskById.taskStatus) {
+        string taskTitle = taskById.title;
+        int taskGroupId = taskById.taskGroupId;
+        string originalStatus = taskById.taskStatus;
+
+        if (newStatus == originalStatus) {
             ConflictMessage errorMsg = {
                 body: {
-                    message: "The task is already in the provided status"
+                    message: string `The task ${taskTitle} in group ID ${taskGroupId} is already in the provided status`
                 }
             };
             return errorMsg;
         }
 
         TaskIdBody taskIdBody = {
-            title: taskById.title,
-            taskGroupId: taskById.taskGroupId,
-            taskStatus: payload.status
+            title: taskTitle,
+            taskGroupId: taskGroupId,
+            taskStatus: newStatus
         };
         Task taskByIdResult = check taskClient->updateTaskById(id, taskIdBody);
+
+        // Send an email notification if the task was reopened.
+        [string, string]|error extractedEmailAndGivenName = extractEmailAndGivenName(request);
+        if extractedEmailAndGivenName is string[] {
+            [string, string] [email, name] = extractedEmailAndGivenName;
+
+            string msg = string `Hi ${name}, The task ${taskTitle} that was in ${originalStatus} status has been reopened.`;
+            MainNotificationrequest notification = {
+                sendEmail: true,
+                userEmail: email,
+                'type: "info",
+                message: msg
+            };
+            ServicesNotificationcreateresponse|error postApiV1Notification =
+            notificationClient->postApiV1Notification(notification);
+
+            if postApiV1Notification is ServicesNotificationcreateresponse {
+                string successLogMsg = string `Email notification sent to ${email} for task ${taskTitle}`;
+                log:printInfo(successLogMsg);
+            } else {
+                log:printError("Could not send a notification for the reopened task. Error while invoking" +
+            " the notification API.", postApiV1Notification, taskId = id, taskTitle = taskTitle);
+            }
+        } else {
+            log:printError("Error while extracting user info from the backend JWT. Will not be sending an email" +
+            " notification for the reopened task.", extractedEmailAndGivenName, taskId = id, taskTitle = taskTitle);
+        }
+
         return {
             status: taskByIdResult.taskStatus
         };
@@ -179,7 +223,7 @@ service / on new http:Listener(9090) {
         return http:OK;
     }
 
-    # Archive task.
+    # Archive group.
     #
     # + payload - Id of the group to be archived
     # + return - Ok 200
@@ -189,12 +233,30 @@ service / on new http:Listener(9090) {
 }
 
 isolated function extractUser(http:Request request) returns string|error {
-    string jwtHeader = check request.getHeader("x-jwt-assertion");
-    [jwt:Header, jwt:Payload] decode = check jwt:decode(jwtHeader);
-    string? userId = decode[1].sub;
+    string jwtHeader = check request.getHeader(BACKEND_JWT_HEADER_KEY);
+    [jwt:Header, jwt:Payload] [_, payload] = check jwt:decode(jwtHeader);
+    string? userId = payload.sub;
     if userId == () {
         return error("Unable to read the user ID. Backend JWT did not include the claim sub");
     }
     return userId;
 }
 
+isolated function extractEmailAndGivenName(http:Request request) returns [string, string]|error {
+    string jwtHeader = check request.getHeader(BACKEND_JWT_HEADER_KEY);
+    [jwt:Header, jwt:Payload] [_, payload] = check jwt:decode(jwtHeader);
+    var emailVar = payload[USER_ATTRIBUTE_EMAIL];
+    if emailVar == () {
+        return error("Error while extracting the user email from the Backend JWT. " +
+    "The claim " + USER_ATTRIBUTE_EMAIL + " is not present.");
+    }
+    var givenNameVar = payload[USER_ATTRIBUTE_GIVEN_NAME];
+    if givenNameVar == () {
+        return error("Error while extracting the name of the user from the Backend JWT. " +
+    "The claim " + USER_ATTRIBUTE_GIVEN_NAME + " is not present");
+    }
+
+    string email = <string>emailVar;
+    string givenName = <string>givenNameVar;
+    return [email, givenName];
+}
