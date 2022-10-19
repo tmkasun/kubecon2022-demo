@@ -8,7 +8,7 @@ import (
 	"github.com/mailgun/mailgun-go/v4"
 )
 
-func SendEmail(ctx context.Context, email string) (string, error) {
+func SendEmail(ctx context.Context, email string, msg string) (string, error) {
 	mg := mailgun.NewMailgun(os.Getenv("domain"), os.Getenv("apiKey"))
 
 	m := mg.NewMessage(
@@ -18,6 +18,7 @@ func SendEmail(ctx context.Context, email string) (string, error) {
 		email,
 	)
 	m.SetTemplate("task-repopened")
+	m.AddVariable("message", msg)
 	_, id, err := mg.Send(ctx, m)
 
 	return id, err
